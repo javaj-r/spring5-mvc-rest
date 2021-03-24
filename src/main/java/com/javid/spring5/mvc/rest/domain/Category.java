@@ -1,6 +1,7 @@
 package com.javid.spring5.mvc.rest.domain;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
  */
 
 @Data
+@Accessors(chain = true)
 @Entity
 public class Category {
 
