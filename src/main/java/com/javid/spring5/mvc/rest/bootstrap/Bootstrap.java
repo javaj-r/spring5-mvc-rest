@@ -1,11 +1,15 @@
 package com.javid.spring5.mvc.rest.bootstrap;
 
 import com.javid.spring5.mvc.rest.domain.Category;
+import com.javid.spring5.mvc.rest.domain.Customer;
 import com.javid.spring5.mvc.rest.repositories.CategoryRepository;
+import com.javid.spring5.mvc.rest.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Created by Javid on 3/24/2021.
@@ -17,16 +21,34 @@ import org.springframework.stereotype.Component;
 public class Bootstrap implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public void run(String... args) throws Exception {
         insertCategories("Fruits", "Dried", "Fresh", "Exotic", "Nuts");
-        log.debug("Data inserted = " + categoryRepository.count() + " Categories");
+
+        insertCustomers(
+                List.of("Sam", "Axe"),
+                List.of("Ken", "West"),
+                List.of("Joe", "Buck"),
+                List.of("John", "Thompson"),
+                List.of("Micheal ", "Weston")
+        );
     }
 
     private void insertCategories(String... names) {
         for (var name : names) {
             categoryRepository.save(new Category().setName(name));
         }
+        log.debug("Data inserted = " + categoryRepository.count() + " Categories");
+    }
+
+    private void insertCustomers(List<String>... names) {
+        for (List<String> name : names) {
+            if (name.size() == 2) {
+                customerRepository.save(new Customer().setFirstName(name.get(0)).setLastName(name.get(1)));
+            }
+        }
+        log.debug("Data inserted = " + customerRepository.count() + " Customers");
     }
 }
