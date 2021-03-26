@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface CustomerService {
 
+    String URL = "/api/v1/customers";
+
     List<CustomerDTO> findAll();
 
     CustomerDTO findById(Long id);

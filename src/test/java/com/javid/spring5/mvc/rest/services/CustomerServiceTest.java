@@ -28,6 +28,7 @@ class CustomerServiceTest {
     private static final String FIRST_NAME = new RandomString().nextString();
     private static final String LAST_NAME = new RandomString().nextString();
     private static final Long ID = Math.abs(new Random().nextLong());
+    private static final String CUSTOMER_URL = CustomerService.URL + "/" + ID;
     private static final String FIRST_NAME2 = new RandomString().nextString();
     private static final String LAST_NAME2 = new RandomString().nextString();
     private static final Long ID2 = Math.abs(new Random().nextLong());
@@ -64,9 +65,9 @@ class CustomerServiceTest {
         var customerDTO = customerService.findById(ID);
         // then
         assertNotNull(customerDTO);
-        assertEquals(ID, customerDTO.getId());
         assertEquals(FIRST_NAME, customerDTO.getFirstName());
         assertEquals(LAST_NAME, customerDTO.getLastName());
+        assertEquals(CUSTOMER_URL, customerDTO.getCustomerUrl());
     }
 
     @Test

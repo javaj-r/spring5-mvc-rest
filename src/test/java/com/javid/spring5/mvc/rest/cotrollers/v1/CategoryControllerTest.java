@@ -67,5 +67,4 @@ class CategoryControllerTest {
                 .andExpect(jsonPath("$.categories", hasSize(2)));
     }
 
-
 }
