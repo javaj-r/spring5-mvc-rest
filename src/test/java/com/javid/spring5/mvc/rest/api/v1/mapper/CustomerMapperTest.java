@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CustomerMapperTest {
 
-
     private static final String FIRST_NAME = new RandomString().nextString();
     private static final String LAST_NAME = new RandomString().nextString();
     private static final Long ID = Math.abs(new Random().nextLong());
