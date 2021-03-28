@@ -1,6 +1,7 @@
 package com.javid.spring5.mvc.rest.services;
 
 import com.javid.spring5.mvc.rest.api.v1.mapper.CustomerMapper;
+import com.javid.spring5.mvc.rest.api.v1.model.CustomerDTO;
 import com.javid.spring5.mvc.rest.domain.Customer;
 import com.javid.spring5.mvc.rest.repositories.CustomerRepository;
 import net.bytebuddy.utility.RandomString;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -78,5 +80,20 @@ class CustomerServiceTest {
         var customerDTO = customerService.findById(ID);
         // then
         assertNull(customerDTO);
+    }
+
+    @Test
+    void save() {
+        // given
+        var customerDTO = new CustomerDTO().setFirstName(FIRST_NAME).setLastName(LAST_NAME);
+        var customer = new Customer().setId(ID).setFirstName(FIRST_NAME).setLastName(LAST_NAME);
+        when(customerRepository.save(any(Customer.class))).thenReturn(customer);
+        // when
+        var savedCustomerDTO = customerService.sve(customerDTO);
+        // then
+        assertNotNull(savedCustomerDTO);
+        assertEquals(FIRST_NAME, savedCustomerDTO.getFirstName());
+        assertEquals(LAST_NAME, savedCustomerDTO.getLastName());
+        assertEquals(CUSTOMER_URL, savedCustomerDTO.getCustomerUrl());
     }
 }

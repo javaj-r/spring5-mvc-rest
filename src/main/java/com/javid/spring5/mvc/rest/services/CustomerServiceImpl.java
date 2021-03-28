@@ -36,4 +36,14 @@ public class CustomerServiceImpl implements CustomerService {
                 .map(customerMapper::customerToCustomerDtoWithUrl)
                 .orElse(null);
     }
+
+    @Override
+    public CustomerDTO sve(CustomerDTO customerDTO) {
+
+        var customer = customerMapper.customerDtoToCustomer(customerDTO);
+
+        var savedCustomer = customerRepository.save(customer);
+
+        return customerMapper.customerToCustomerDtoWithUrl(savedCustomer);
+    }
 }

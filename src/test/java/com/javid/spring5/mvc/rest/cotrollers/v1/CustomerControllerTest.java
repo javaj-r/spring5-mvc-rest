@@ -14,11 +14,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static com.javid.spring5.mvc.rest.cotrollers.v1.JsonHandlerForTest.asJsonString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,8 +71,27 @@ class CustomerControllerTest {
         mockMvc.perform(get(CUSTOMER_URL).contentType(MediaType.APPLICATION_JSON))
                 // then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)))
-                .andExpect(jsonPath("$.customerUrl", equalTo(CUSTOMER_URL)));
+                .andExpect(jsonPath("$.firstname", equalTo(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastname", equalTo(LAST_NAME)))
+                .andExpect(jsonPath("$.customer_url", equalTo(CUSTOMER_URL)));
+    }
+
+    @Test
+    void postNewCustomer() throws Exception {
+        // given
+        var customerDTO = new CustomerDTO().setFirstName(FIRST_NAME).setLastName(LAST_NAME);
+        var savedCustomerDTO = new CustomerDTO().setFirstName(FIRST_NAME).setLastName(LAST_NAME).setCustomerUrl(CUSTOMER_URL);
+
+        when(customerService.sve(customerDTO)).thenReturn(savedCustomerDTO);
+        // when
+        mockMvc.perform(post("/api/v1/customers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customerDTO))
+        )
+                // then
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstname", equalTo(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastname", equalTo(LAST_NAME)))
+                .andExpect(jsonPath("$.customer_url", equalTo(CUSTOMER_URL)));
     }
 }

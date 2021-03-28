@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by Javid on 3/24/2021.
@@ -36,5 +35,14 @@ class CategoryMapperTest {
         assertNotNull(categoryDTO);
         assertEquals(ID, categoryDTO.getId());
         assertEquals(NAME, categoryDTO.getName());
+    }
+
+    @Test
+    void categoryToCategoryDtoWhenNull() {
+        // given
+        // when
+        var categoryDTO = mapper.categoryToCategoryDto(null);
+        // then
+        assertNull(categoryDTO);
     }
 }
