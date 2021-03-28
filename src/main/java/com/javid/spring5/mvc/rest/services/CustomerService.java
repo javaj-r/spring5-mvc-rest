@@ -16,5 +16,7 @@ public interface CustomerService {
 
     CustomerDTO findById(Long id);
 
-    CustomerDTO sve(CustomerDTO customerDTO);
+    CustomerDTO save(CustomerDTO customerDTO);
+
+    CustomerDTO save(CustomerDTO customerDTO, Long id);
 }

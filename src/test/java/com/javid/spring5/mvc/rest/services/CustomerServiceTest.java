@@ -89,7 +89,22 @@ class CustomerServiceTest {
         var customer = new Customer().setId(ID).setFirstName(FIRST_NAME).setLastName(LAST_NAME);
         when(customerRepository.save(any(Customer.class))).thenReturn(customer);
         // when
-        var savedCustomerDTO = customerService.sve(customerDTO);
+        var savedCustomerDTO = customerService.save(customerDTO);
+        // then
+        assertNotNull(savedCustomerDTO);
+        assertEquals(FIRST_NAME, savedCustomerDTO.getFirstName());
+        assertEquals(LAST_NAME, savedCustomerDTO.getLastName());
+        assertEquals(CUSTOMER_URL, savedCustomerDTO.getCustomerUrl());
+    }
+
+    @Test
+    void saveById() {
+        // given
+        var customerDTO = new CustomerDTO().setFirstName(FIRST_NAME).setLastName(LAST_NAME);
+        var customer = new Customer().setId(ID).setFirstName(FIRST_NAME).setLastName(LAST_NAME);
+        when(customerRepository.save(any(Customer.class))).thenReturn(customer);
+        // when
+        var savedCustomerDTO = customerService.save(customerDTO, ID);
         // then
         assertNotNull(savedCustomerDTO);
         assertEquals(FIRST_NAME, savedCustomerDTO.getFirstName());
