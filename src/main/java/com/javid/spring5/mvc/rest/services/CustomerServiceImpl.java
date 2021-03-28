@@ -50,4 +50,20 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerMapper.customerToCustomerDtoWithUrl(savedCustomer);
     }
+
+    @Override
+    public CustomerDTO patch(CustomerDTO customerDTO, Long id) {
+        final var firstname = customerDTO.getFirstName();
+        final var lastname = customerDTO.getLastName();
+
+        return customerRepository.findById(id).map(customer ->
+                customerMapper.customerToCustomerDtoWithUrl(
+                        customerRepository.save(
+                                customer.setFirstName(firstname != null ? firstname : customer.getFirstName())
+                                        .setLastName(lastname != null ? lastname : customer.getLastName())
+                        )
+                )
+        ).orElseThrow(RuntimeException::new);
+    }
+
 }
