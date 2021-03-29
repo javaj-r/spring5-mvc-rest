@@ -7,6 +7,7 @@ import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -66,12 +67,13 @@ class CategoryServiceTest {
     }
 
     @Test
-    void findByNameWhenNull() {
+    void findByNameNotFoundException() {
         // given
         when(categoryRepository.findByName(anyString())).thenReturn(Optional.empty());
         // when
-        var categoryDTO = categoryService.findByName(NAME);
+        Executable executable = () -> categoryService.findByName(NAME);
         // then
-        assertNull(categoryDTO);
+        assertThrows(ResourceNotFoundException.class, executable);
     }
+
 }

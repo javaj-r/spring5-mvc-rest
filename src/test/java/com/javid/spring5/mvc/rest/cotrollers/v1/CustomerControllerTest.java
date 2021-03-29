@@ -1,7 +1,9 @@
 package com.javid.spring5.mvc.rest.cotrollers.v1;
 
 import com.javid.spring5.mvc.rest.api.v1.model.CustomerDTO;
+import com.javid.spring5.mvc.rest.cotrollers.RestResponseEntityExceptionHandler;
 import com.javid.spring5.mvc.rest.services.CustomerService;
+import com.javid.spring5.mvc.rest.services.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +47,9 @@ class CustomerControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(customerController)
+                .setControllerAdvice(RestResponseEntityExceptionHandler.class)
+                .build();
     }
 
     @Test
@@ -75,6 +78,18 @@ class CustomerControllerTest {
                 .andExpect(jsonPath("$.firstname", equalTo(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastname", equalTo(LAST_NAME)))
                 .andExpect(jsonPath("$.customer_url", equalTo(CUSTOMER_URL)));
+    }
+
+    @Test
+    void getCustomerNotFoundException() throws Exception {
+        // given
+        when(customerService.findById(anyLong())).thenThrow(ResourceNotFoundException.class);
+        // when
+        mockMvc.perform(get(CUSTOMER_URL).contentType(MediaType.APPLICATION_JSON))
+                // then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status_code", equalTo(404)))
+                .andExpect(jsonPath("$.error", equalTo(RestResponseEntityExceptionHandler.RESOURCE_NOTFOUND)));
     }
 
     @Test
@@ -143,5 +158,17 @@ class CustomerControllerTest {
                 .andExpect(status().isOk());
 
         verify(customerService).deleteById(anyLong());
+    }
+
+    @Test
+    void deleteByIdNotFoundException() throws Exception {
+        // given
+        doThrow(ResourceNotFoundException.class).when(customerService).deleteById(anyLong());
+        // when
+        mockMvc.perform(delete(CUSTOMER_URL))
+                // then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status_code", equalTo(404)))
+                .andExpect(jsonPath("$.error", equalTo(RestResponseEntityExceptionHandler.RESOURCE_NOTFOUND)));
     }
 }

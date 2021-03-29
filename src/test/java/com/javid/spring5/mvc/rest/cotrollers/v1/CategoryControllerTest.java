@@ -1,7 +1,9 @@
 package com.javid.spring5.mvc.rest.cotrollers.v1;
 
 import com.javid.spring5.mvc.rest.api.v1.model.CategoryDTO;
+import com.javid.spring5.mvc.rest.cotrollers.RestResponseEntityExceptionHandler;
 import com.javid.spring5.mvc.rest.services.CategoryService;
+import com.javid.spring5.mvc.rest.services.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +43,9 @@ class CategoryControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
+                .setControllerAdvice(RestResponseEntityExceptionHandler.class)
+                .build();
     }
 
     @Test
@@ -53,6 +57,18 @@ class CategoryControllerTest {
                 // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
+    }
+
+    @Test
+    void getCategoryNotFoundException() throws Exception {
+        // given
+        when(categoryService.findByName(anyString())).thenThrow(ResourceNotFoundException.class);
+        // when
+        mockMvc.perform(get("/api/v1/categories/fruit").contentType(MediaType.APPLICATION_JSON))
+                // then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status_code", equalTo(404)))
+                .andExpect(jsonPath("$.error", equalTo(RestResponseEntityExceptionHandler.RESOURCE_NOTFOUND)));
     }
 
     @Test

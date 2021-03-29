@@ -34,7 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository
                 .findById(id)
                 .map(customerMapper::customerToCustomerDtoWithUrl)
-                .orElse(null);
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -63,12 +63,16 @@ public class CustomerServiceImpl implements CustomerService {
                                         .setLastName(lastname != null ? lastname : customer.getLastName())
                         )
                 )
-        ).orElseThrow(RuntimeException::new);
+        ).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
     public void deleteById(Long id) {
-        customerRepository.deleteById(id);
+        try {
+            customerRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
     }
 
 }

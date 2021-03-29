@@ -8,8 +8,10 @@ import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +20,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Javid on 3/26/2021.
@@ -74,13 +75,13 @@ class CustomerServiceTest {
     }
 
     @Test
-    void findByIdWhenNotExists() {
+    void findByIdNotFoundException() {
         // given
         when(customerRepository.findById(anyLong())).thenReturn(Optional.empty());
         // when
-        var customerDTO = customerService.findById(ID);
+        Executable executable = () -> customerService.findById(ID);
         // then
-        assertNull(customerDTO);
+        assertThrows(ResourceNotFoundException.class, executable);
     }
 
     @Test
@@ -120,5 +121,15 @@ class CustomerServiceTest {
         customerService.deleteById(ID);
         // then
         verify(customerRepository).deleteById(anyLong());
+    }
+
+    @Test
+    void deleteByIdNotFoundException() {
+        // given
+        doThrow(EmptyResultDataAccessException.class).when(customerRepository).deleteById(anyLong());
+        // when
+        Executable executable = () -> customerService.deleteById(ID);
+        // then
+        assertThrows(ResourceNotFoundException.class, executable);
     }
 }

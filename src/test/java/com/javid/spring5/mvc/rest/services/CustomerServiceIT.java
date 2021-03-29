@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -54,7 +56,7 @@ class CustomerServiceIT {
     @RepeatedTest(value = 5, name = "patch firstname {currentRepetition} of {totalRepetitions}")
     void patchFirstName() {
         // when
-        var customerDTO= customerService.patch(new CustomerDTO().setFirstName(updateFirstname), id);
+        var customerDTO = customerService.patch(new CustomerDTO().setFirstName(updateFirstname), id);
 
         var updatedCustomer = customerRepository.findById(id).orElseThrow(RuntimeException::new);
 
@@ -71,7 +73,7 @@ class CustomerServiceIT {
     @RepeatedTest(value = 5, name = "patch lastname {currentRepetition} of {totalRepetitions}")
     void patchLastName() {
         // when
-        var customerDTO= customerService.patch(new CustomerDTO().setLastName(updateLastname), id);
+        var customerDTO = customerService.patch(new CustomerDTO().setLastName(updateLastname), id);
 
         var updatedCustomer = customerRepository.findById(id).orElseThrow(RuntimeException::new);
 
@@ -83,6 +85,16 @@ class CustomerServiceIT {
         assertEquals(firstname, customerDTO.getFirstName());
         assertEquals(updateLastname, customerDTO.getLastName());
         assertEquals(CustomerService.URL + "/" + id, customerDTO.getCustomerUrl());
+    }
+
+    @Test
+    void patchNotFoundException() {
+        // given
+        var notExistingId = id * 2;
+        // when
+        Executable executable = () -> customerService.patch(new CustomerDTO(), notExistingId);
+        // then
+        assertThrows(ResourceNotFoundException.class, executable);
     }
 
 }

@@ -34,6 +34,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository
                 .findByName(name)
                 .map(categoryMapper::categoryToCategoryDto)
-                .orElse(null);
+                .orElseThrow(ResourceNotFoundException::new);
     }
 }
