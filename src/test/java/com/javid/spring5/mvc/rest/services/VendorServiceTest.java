@@ -7,14 +7,16 @@ import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 /**
@@ -26,7 +28,7 @@ class VendorServiceTest {
 
     private static final String NAME = new RandomString().nextString();
     private static final Long ID = Math.abs(new Random().nextLong());
-    private static final String CUSTOMER_URL = VendorService.URL + "/" + ID;
+    private static final String VENDOR_URL = VendorService.URL + "/" + ID;
     private static final String NAME2 = new RandomString().nextString();
     private static final Long ID2 = Math.abs(new Random().nextLong());
 
@@ -52,4 +54,28 @@ class VendorServiceTest {
         assertNotNull(vendorDTOList);
         assertEquals(vendorList.size(), vendorDTOList.size());
     }
+
+    @Test
+    void findById() {
+        // given
+        var vendor = new Vendor().setId(ID).setName(NAME);
+        when(vendorRepository.findById(anyLong())).thenReturn(Optional.of(vendor));
+        // when
+        var vendorDTO = vendorService.findById(ID);
+        // then
+        assertNotNull(vendorDTO);
+        assertEquals(NAME, vendorDTO.getName());
+        assertEquals(VENDOR_URL, vendorDTO.getVendorUrl());
+    }
+
+    @Test
+    void findByIdNotFoundException() {
+        // given
+        when(vendorRepository.findById(anyLong())).thenReturn(Optional.empty());
+        // when
+        Executable executable = () -> vendorService.findById(ID);
+        // then
+        assertThrows(ResourceNotFoundException.class, executable);
+    }
+
 }

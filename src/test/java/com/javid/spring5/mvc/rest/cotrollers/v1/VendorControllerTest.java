@@ -2,6 +2,7 @@ package com.javid.spring5.mvc.rest.cotrollers.v1;
 
 import com.javid.spring5.mvc.rest.api.v1.model.VendorDTO;
 import com.javid.spring5.mvc.rest.cotrollers.RestResponseEntityExceptionHandler;
+import com.javid.spring5.mvc.rest.services.ResourceNotFoundException;
 import com.javid.spring5.mvc.rest.services.VendorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -57,6 +60,31 @@ class VendorControllerTest {
                 // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.vendors", hasSize(2)));
+    }
+
+    @Test
+    void getVendor() throws Exception {
+        // given
+        var vendorDTO = new VendorDTO().setName(NAME).setVendorUrl(VENDOR_URL);
+        when(vendorService.findById(anyLong())).thenReturn(vendorDTO);
+        // when
+        mockMvc.perform(get(VENDOR_URL).contentType(MediaType.APPLICATION_JSON))
+                // then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", equalTo(NAME)))
+                .andExpect(jsonPath("$.vendor_url", equalTo(VENDOR_URL)));
+    }
+
+    @Test
+    void getVendorNotFoundException() throws Exception {
+        // given
+        when(vendorService.findById(anyLong())).thenThrow(ResourceNotFoundException.class);
+        // when
+        mockMvc.perform(get(VENDOR_URL).contentType(MediaType.APPLICATION_JSON))
+                // then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status_code", equalTo(404)))
+                .andExpect(jsonPath("$.error", equalTo(RestResponseEntityExceptionHandler.RESOURCE_NOTFOUND)));
     }
 
 }

@@ -28,4 +28,12 @@ public class VendorServiceImpl implements VendorService {
                 .map(vendorMapper::vendorToVendorDtoWithUrl)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public VendorDTO findById(Long id) {
+        return vendorRepository
+                .findById(id)
+                .map(vendorMapper::vendorToVendorDtoWithUrl)
+                .orElseThrow(ResourceNotFoundException::new);
+    }
 }

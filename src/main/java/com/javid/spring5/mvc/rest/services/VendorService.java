@@ -13,4 +13,7 @@ public interface VendorService {
     String URL = "/api/v1/vendors";
 
     List<VendorDTO> findAll();
+
+    VendorDTO findById(Long id);
+
 }
