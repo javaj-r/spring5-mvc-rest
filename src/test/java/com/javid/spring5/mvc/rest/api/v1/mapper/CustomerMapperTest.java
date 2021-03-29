@@ -84,4 +84,14 @@ class CustomerMapperTest {
         assertEquals(FIRST_NAME, customer.getFirstName());
         assertEquals(LAST_NAME, customer.getLastName());
     }
+
+    @Test
+    void customerDtoToCustomerWhenNull() {
+        // given
+        // when
+        var customer = customerMapper.customerDtoToCustomer(null);
+        // then
+        assertNull(customer);
+    }
+
 }

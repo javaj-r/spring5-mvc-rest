@@ -115,6 +115,48 @@ class CustomerServiceTest {
     }
 
     @Test
+    void patchFirstName() {
+        // given
+        var customer = new Customer().setId(ID).setFirstName(FIRST_NAME).setLastName(LAST_NAME);
+        var customerDTO = new CustomerDTO().setFirstName(FIRST_NAME2);
+        when(customerRepository.findById(ID)).thenReturn(Optional.of(customer));
+        when(customerRepository.save(any(Customer.class))).thenAnswer(invocation -> invocation.getArguments()[0]);
+        // when
+        var savedCustomerDTO = customerService.patch(customerDTO, ID);
+        // then
+        assertNotNull(savedCustomerDTO);
+        assertEquals(FIRST_NAME2, savedCustomerDTO.getFirstName());
+        assertEquals(LAST_NAME, savedCustomerDTO.getLastName());
+        assertEquals(CUSTOMER_URL, savedCustomerDTO.getCustomerUrl());
+    }
+
+    @Test
+    void patchLastName() {
+        // given
+        var customer = new Customer().setId(ID).setFirstName(FIRST_NAME).setLastName(LAST_NAME);
+        var customerDTO = new CustomerDTO().setLastName(LAST_NAME2);
+        when(customerRepository.findById(ID)).thenReturn(Optional.of(customer));
+        when(customerRepository.save(any(Customer.class))).thenAnswer(invocation -> invocation.getArguments()[0]);
+        // when
+        var savedCustomerDTO = customerService.patch(customerDTO, ID);
+        // then
+        assertNotNull(savedCustomerDTO);
+        assertEquals(FIRST_NAME, savedCustomerDTO.getFirstName());
+        assertEquals(LAST_NAME2, savedCustomerDTO.getLastName());
+        assertEquals(CUSTOMER_URL, savedCustomerDTO.getCustomerUrl());
+    }
+
+    @Test
+    void patchNotFoundException() {
+        // given
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.empty());
+        // when
+        Executable executable = () -> customerService.patch(new CustomerDTO(), ID);
+        // then
+        assertThrows(ResourceNotFoundException.class, executable);
+    }
+
+    @Test
     void deleteById() {
         // given
         // when

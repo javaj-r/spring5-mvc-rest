@@ -5,11 +5,7 @@ import com.javid.spring5.mvc.rest.api.v1.model.CategoryDTO;
 import com.javid.spring5.mvc.rest.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Javid on 3/25/2021.
@@ -17,19 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/categories")
-@Controller
+@RestController
 public class CategoryController {
 
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<CategoriesDTO> getCategories() {
-        return new ResponseEntity<>(new CategoriesDTO(categoryService.findAll()), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CategoriesDTO getCategories() {
+        return new CategoriesDTO(categoryService.findAll());
     }
 
     @GetMapping("{name}")
-    public ResponseEntity<CategoryDTO> getCategory(@PathVariable String name) {
-        return new ResponseEntity<>(categoryService.findByName(name), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CategoryDTO getCategory(@PathVariable String name) {
+        return categoryService.findByName(name);
     }
 
 }

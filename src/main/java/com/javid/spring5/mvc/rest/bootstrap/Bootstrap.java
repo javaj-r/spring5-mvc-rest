@@ -32,7 +32,7 @@ public class Bootstrap implements CommandLineRunner {
                 List.of("Ken", "West"),
                 List.of("Joe", "Buck"),
                 List.of("John", "Thompson"),
-                List.of("Micheal ", "Weston")
+                List.of("Micheal", "Weston")
         );
     }
 
