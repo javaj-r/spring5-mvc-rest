@@ -1,0 +1,62 @@
+package com.javid.spring5.mvc.rest.cotrollers.v1;
+
+import com.javid.spring5.mvc.rest.api.v1.model.VendorDTO;
+import com.javid.spring5.mvc.rest.cotrollers.RestResponseEntityExceptionHandler;
+import com.javid.spring5.mvc.rest.services.VendorService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+/**
+ * Created by Javid on 3/29/2021.
+ */
+
+@ExtendWith(MockitoExtension.class)
+class VendorControllerTest {
+
+    public static final String NAME = "Dalton Group";
+    public static final String VENDOR_URL = "/api/v1/vendors/1";
+
+    @Mock
+    VendorService vendorService;
+
+    @InjectMocks
+    VendorController vendorController;
+
+    MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(vendorController)
+                .setControllerAdvice(RestResponseEntityExceptionHandler.class)
+                .build();
+    }
+
+    @Test
+    void getVendors() throws Exception {
+        // given
+        var vendorDTOS = List.of(new VendorDTO().setName(NAME).setVendorUrl(VENDOR_URL),
+                new VendorDTO().setName("Lucky Look").setVendorUrl("/api/v1/vendors/2"));
+        when(vendorService.findAll()).thenReturn(vendorDTOS);
+        // when
+        mockMvc.perform(get("/api/v1/vendors").contentType(MediaType.APPLICATION_JSON))
+                // then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.vendors", hasSize(2)));
+    }
+
+}
