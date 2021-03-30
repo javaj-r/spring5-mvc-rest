@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Javid on 3/29/2021.
@@ -129,6 +130,25 @@ class VendorServiceTest {
         when(vendorRepository.findById(ID)).thenReturn(Optional.empty());
         // when
         Executable executable = () -> vendorService.patch(new VendorDTO(), ID);
+        // then
+        assertThrows(ResourceNotFoundException.class, executable);
+    }
+
+    @Test
+    void deleteById() {
+        // given
+        // when
+        vendorService.deleteById(ID);
+        // then
+        verify(vendorRepository).deleteById(anyLong());
+    }
+
+    @Test
+    void deleteByIdNotFoundException() {
+        // given
+        doThrow(EmptyResultDataAccessException.class).when(vendorRepository).deleteById(anyLong());
+        // when
+        Executable executable = () -> vendorService.deleteById(ID);
         // then
         assertThrows(ResourceNotFoundException.class, executable);
     }

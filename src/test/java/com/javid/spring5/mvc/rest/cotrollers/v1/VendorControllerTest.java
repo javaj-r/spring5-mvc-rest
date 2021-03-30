@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -153,6 +153,29 @@ class VendorControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(vendorDTO))
         )
+                // then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status_code", equalTo(404)))
+                .andExpect(jsonPath("$.error", equalTo(RestResponseEntityExceptionHandler.RESOURCE_NOTFOUND)));
+    }
+
+    @Test
+    void deleteById() throws Exception {
+        // given
+        // when
+        mockMvc.perform(delete(VENDOR_URL))
+                // then
+                .andExpect(status().isOk());
+
+        verify(vendorService).deleteById(anyLong());
+    }
+
+    @Test
+    void deleteByIdNotFoundException() throws Exception {
+        // given
+        doThrow(ResourceNotFoundException.class).when(vendorService).deleteById(anyLong());
+        // when
+        mockMvc.perform(delete(VENDOR_URL))
                 // then
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status_code", equalTo(404)))
