@@ -39,7 +39,12 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public VendorDTO save(VendorDTO vendorDTO) {
-        var vendor = vendorMapper.vendorDtoToVendor(vendorDTO);
+        return save(vendorDTO, null);
+    }
+
+    @Override
+    public VendorDTO save(VendorDTO vendorDTO, Long id) {
+        var vendor = vendorMapper.vendorDtoToVendor(vendorDTO).setId(id);
 
         var savedVendor = vendorRepository.save(vendor);
 

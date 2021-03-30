@@ -108,6 +108,24 @@ class VendorControllerTest {
     }
 
     @Test
+    void updateVendor() throws Exception {
+        // given
+        var vendorDTO = new VendorDTO().setName(NAME);
+        var savedVendorDTO = new VendorDTO().setName(NAME).setVendorUrl(VENDOR_URL);
+
+        when(vendorService.save(any(VendorDTO.class), anyLong())).thenReturn(savedVendorDTO);
+        // when
+        mockMvc.perform(put(VENDOR_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(vendorDTO))
+        )
+                // then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", equalTo(NAME)))
+                .andExpect(jsonPath("$.vendor_url", equalTo(VENDOR_URL)));
+    }
+
+    @Test
     void patchVendor() throws Exception {
         // given
         var vendorDTO = new VendorDTO().setName(NAME);

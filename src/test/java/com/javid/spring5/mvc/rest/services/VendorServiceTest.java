@@ -95,6 +95,20 @@ class VendorServiceTest {
     }
 
     @Test
+    void saveById() {
+        // given
+        var vendorDTO = new VendorDTO().setName(NAME);
+        var vendor = new Vendor().setId(ID).setName(NAME);
+        when(vendorRepository.save(any(Vendor.class))).thenReturn(vendor);
+        // when
+        var savedVendor = vendorService.save(vendorDTO, ID);
+        // then
+        assertNotNull(savedVendor);
+        assertEquals(NAME, savedVendor.getName());
+        assertEquals(VENDOR_URL, savedVendor.getVendorUrl());
+    }
+
+    @Test
     void patchName() {
         // given
         var vendor = new Vendor().setId(ID).setName(NAME);
