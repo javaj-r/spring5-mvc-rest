@@ -94,4 +94,29 @@ class VendorServiceTest {
         assertEquals(VENDOR_URL, savedVendor.getVendorUrl());
     }
 
+    @Test
+    void patchName() {
+        // given
+        var vendor = new Vendor().setId(ID).setName(NAME);
+        var vendorDTO = new VendorDTO().setName(NAME2);
+        when(vendorRepository.findById(ID)).thenReturn(Optional.of(vendor));
+        when(vendorRepository.save(any(Vendor.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        // when
+        var savedVendorDTO = vendorService.patch(vendorDTO, ID);
+        // then
+        assertNotNull(savedVendorDTO);
+        assertEquals(NAME2, savedVendorDTO.getName());
+        assertEquals(VENDOR_URL, savedVendorDTO.getVendorUrl());
+    }
+
+    @Test
+    void patchNotFoundException() {
+        // given
+        when(vendorRepository.findById(ID)).thenReturn(Optional.empty());
+        // when
+        Executable executable = () -> vendorService.patch(new VendorDTO(), ID);
+        // then
+        assertThrows(ResourceNotFoundException.class, executable);
+    }
+
 }

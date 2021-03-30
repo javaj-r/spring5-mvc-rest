@@ -150,6 +150,22 @@ class CustomerControllerTest {
     }
 
     @Test
+    void patchCustomerNotFoundException() throws Exception {
+        // given
+        var customerDTO = new CustomerDTO().setFirstName(FIRST_NAME);
+        when(customerService.patch(any(CustomerDTO.class) ,anyLong())).thenThrow(ResourceNotFoundException.class);
+        // when
+        mockMvc.perform(patch(CUSTOMER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customerDTO))
+        )
+                // then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status_code", equalTo(404)))
+                .andExpect(jsonPath("$.error", equalTo(RestResponseEntityExceptionHandler.RESOURCE_NOTFOUND)));
+    }
+
+    @Test
     void deleteById() throws Exception {
         // given
         // when
