@@ -36,4 +36,13 @@ public class VendorServiceImpl implements VendorService {
                 .map(vendorMapper::vendorToVendorDtoWithUrl)
                 .orElseThrow(ResourceNotFoundException::new);
     }
+
+    @Override
+    public VendorDTO save(VendorDTO vendorDTO) {
+        var vendor = vendorMapper.vendorDtoToVendor(vendorDTO);
+
+        var savedVendor = vendorRepository.save(vendor);
+
+        return vendorMapper.vendorToVendorDtoWithUrl(savedVendor);
+    }
 }

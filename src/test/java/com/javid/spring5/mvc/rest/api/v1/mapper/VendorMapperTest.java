@@ -1,5 +1,6 @@
 package com.javid.spring5.mvc.rest.api.v1.mapper;
 
+import com.javid.spring5.mvc.rest.api.v1.model.VendorDTO;
 import com.javid.spring5.mvc.rest.domain.Vendor;
 import com.javid.spring5.mvc.rest.services.VendorService;
 import net.bytebuddy.utility.RandomString;
@@ -66,5 +67,25 @@ class VendorMapperTest {
         // then
         assertNotNull(vendorDTO);
         assertEquals(NAME, vendorDTO.getName());
+    }
+
+    @Test
+    void vendorDtoToVendorWhenNull() {
+        // given
+        // when
+        var vendor = vendorMapper.vendorDtoToVendor(null);
+        // then
+        assertNull(vendor);
+    }
+
+    @Test
+    void vendorDtoToVendor() {
+        // given
+        var vendorDTO = new VendorDTO().setName(NAME);
+        // when
+        var vendor = vendorMapper.vendorDtoToVendor(vendorDTO);
+        // then
+        assertNotNull(vendor);
+        assertEquals(NAME, vendor.getName());
     }
 }

@@ -23,4 +23,6 @@ public interface VendorMapper {
 
     VendorDTO vendorToVendorDto(Vendor vendor);
 
+    Vendor vendorDtoToVendor(VendorDTO vendorDTO);
+
 }

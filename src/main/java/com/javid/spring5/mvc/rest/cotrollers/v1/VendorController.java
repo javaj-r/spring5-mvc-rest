@@ -30,5 +30,10 @@ public class VendorController {
         return vendorService.findById(Long.valueOf(id));
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public VendorDTO postNewVendor(@RequestBody VendorDTO vendorDTO) {
+        return vendorService.save(vendorDTO);
+    }
 
 }

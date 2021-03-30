@@ -16,11 +16,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static com.javid.spring5.mvc.rest.cotrollers.v1.JsonHandlerForTest.asJsonString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,6 +87,24 @@ class VendorControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status_code", equalTo(404)))
                 .andExpect(jsonPath("$.error", equalTo(RestResponseEntityExceptionHandler.RESOURCE_NOTFOUND)));
+    }
+
+    @Test
+    void postNewVendor() throws Exception {
+        // given
+        var vendorDTO = new VendorDTO().setName(NAME);
+        var savedVendorDTO = new VendorDTO().setName(NAME).setVendorUrl(VENDOR_URL);
+
+        when(vendorService.save(vendorDTO)).thenReturn(savedVendorDTO);
+        // when
+        mockMvc.perform(post("/api/v1/vendors")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(vendorDTO))
+        )
+                // then
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", equalTo(NAME)))
+                .andExpect(jsonPath("$.vendor_url", equalTo(VENDOR_URL)));
     }
 
 }

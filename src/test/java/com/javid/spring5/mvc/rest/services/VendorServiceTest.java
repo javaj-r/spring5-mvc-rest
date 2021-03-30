@@ -1,6 +1,7 @@
 package com.javid.spring5.mvc.rest.services;
 
 import com.javid.spring5.mvc.rest.api.v1.mapper.VendorMapper;
+import com.javid.spring5.mvc.rest.api.v1.model.VendorDTO;
 import com.javid.spring5.mvc.rest.domain.Vendor;
 import com.javid.spring5.mvc.rest.repositories.VendorRepository;
 import net.bytebuddy.utility.RandomString;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -76,6 +78,20 @@ class VendorServiceTest {
         Executable executable = () -> vendorService.findById(ID);
         // then
         assertThrows(ResourceNotFoundException.class, executable);
+    }
+
+    @Test
+    void save() {
+        // given
+        var vendorDTO = new VendorDTO().setName(NAME);
+        var vendor = new Vendor().setId(ID).setName(NAME);
+        when(vendorRepository.save(any(Vendor.class))).thenReturn(vendor);
+        // when
+        var savedVendor = vendorService.save(vendorDTO);
+        // then
+        assertNotNull(savedVendor);
+        assertEquals(NAME, savedVendor.getName());
+        assertEquals(VENDOR_URL, savedVendor.getVendorUrl());
     }
 
 }
