@@ -58,7 +58,10 @@ class VendorControllerTest {
                 new VendorDTO().setName("Lucky Look").setVendorUrl("/api/v1/vendors/2"));
         when(vendorService.findAll()).thenReturn(vendorDTOS);
         // when
-        mockMvc.perform(get("/api/v1/vendors").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/vendors")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
                 // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.vendors", hasSize(2)));
@@ -70,7 +73,10 @@ class VendorControllerTest {
         var vendorDTO = new VendorDTO().setName(NAME).setVendorUrl(VENDOR_URL);
         when(vendorService.findById(anyLong())).thenReturn(vendorDTO);
         // when
-        mockMvc.perform(get(VENDOR_URL).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(VENDOR_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
                 // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)))
@@ -98,6 +104,7 @@ class VendorControllerTest {
         when(vendorService.save(vendorDTO)).thenReturn(savedVendorDTO);
         // when
         mockMvc.perform(post("/api/v1/vendors")
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(vendorDTO))
         )
@@ -116,6 +123,7 @@ class VendorControllerTest {
         when(vendorService.save(any(VendorDTO.class), anyLong())).thenReturn(savedVendorDTO);
         // when
         mockMvc.perform(put(VENDOR_URL)
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(vendorDTO))
         )
@@ -134,6 +142,7 @@ class VendorControllerTest {
         when(vendorService.patch(any(VendorDTO.class), anyLong())).thenReturn(savedVendorDTO);
         // when
         mockMvc.perform(patch(VENDOR_URL)
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(vendorDTO))
         )

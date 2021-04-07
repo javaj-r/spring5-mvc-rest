@@ -53,7 +53,10 @@ class CategoryControllerTest {
         // given
         when(categoryService.findByName(anyString())).thenReturn(new CategoryDTO().setId(1L).setName(NAME));
         // when
-        mockMvc.perform(get("/api/v1/categories/fruit").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/categories/fruit")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
                 // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
@@ -77,7 +80,10 @@ class CategoryControllerTest {
         when(categoryService.findAll()).thenReturn(
                 List.of(new CategoryDTO().setId(1L).setName(NAME), new CategoryDTO().setId(2L).setName("NUts")));
         // when
-        mockMvc.perform(get("/api/v1/categories").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/categories")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
                 // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categories", hasSize(2)));

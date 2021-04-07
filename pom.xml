@@ -55,6 +55,18 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!-- XML render -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>6.2.4</version>
+        </dependency>
+        <!-- XML render end -->
         <!-- Mapstruct dependencies -->
         <dependency>
             <groupId>org.mapstruct</groupId>

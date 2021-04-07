@@ -59,7 +59,10 @@ class CustomerControllerTest {
                 new CustomerDTO().setFirstName("Averell").setLastName(LAST_NAME));
         when(customerService.findAll()).thenReturn(customerDTOS);
         // when
-        mockMvc.perform(get("/api/v1/customers").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/customers")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
                 // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customers", hasSize(2)));
@@ -72,7 +75,10 @@ class CustomerControllerTest {
                 .setLastName(LAST_NAME).setCustomerUrl(CUSTOMER_URL);
         when(customerService.findById(anyLong())).thenReturn(customerDTO);
         // when
-        mockMvc.perform(get(CUSTOMER_URL).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(CUSTOMER_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
                 // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo(FIRST_NAME)))
@@ -101,6 +107,7 @@ class CustomerControllerTest {
         when(customerService.save(customerDTO)).thenReturn(savedCustomerDTO);
         // when
         mockMvc.perform(post("/api/v1/customers")
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(customerDTO))
         )
@@ -120,6 +127,7 @@ class CustomerControllerTest {
         when(customerService.save(any(CustomerDTO.class), anyLong())).thenReturn(savedCustomerDTO);
         // when
         mockMvc.perform(put(CUSTOMER_URL)
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(customerDTO))
         )
@@ -139,6 +147,7 @@ class CustomerControllerTest {
         when(customerService.patch(any(CustomerDTO.class), anyLong())).thenReturn(savedCustomerDTO);
         // when
         mockMvc.perform(patch(CUSTOMER_URL)
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(customerDTO))
         )
