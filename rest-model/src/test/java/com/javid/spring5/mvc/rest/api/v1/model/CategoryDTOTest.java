@@ -1,12 +1,10 @@
 package com.javid.spring5.mvc.rest.api.v1.model;
 
-import net.bytebuddy.utility.RandomString;
-import org.junit.jupiter.api.BeforeEach;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import org.meanbean.test.BeanTester;
 
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by Javid on 3/27/2021.
@@ -14,41 +12,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryDTOTest {
 
-    CategoryDTO categoryDTO;
-    CategoryDTO categoryDTO1;
-
-    @BeforeEach
-    void setUp() {
-        var id = new Random().nextLong();
-        var name = new RandomString().nextString();
-
-        categoryDTO = new CategoryDTO().setId(id).setName(name);
-        categoryDTO1 = new CategoryDTO().setId(id).setName(name);
+    @Test
+    void chainingSetters() {
+        assertEquals(1L, new CategoryDTO().setId(1L).getId());
+        assertEquals("j", new CategoryDTO().setName("j").getName());
     }
 
     @Test
-    void testEquals() {
-        assertEquals(categoryDTO, categoryDTO);
-        assertEquals(categoryDTO1, categoryDTO);
-        assertNotEquals(categoryDTO,new CategoryDTO());
-        assertNotEquals(categoryDTO,new Object());
+    void gettersAndSetters() {
+        new BeanTester().testBean(CategoryDTO.class);
     }
 
     @Test
-    void canEqual() {
-        assertTrue(new CategoryDTO().canEqual(new CategoryDTO()));
-        assertFalse(new CategoryDTO().canEqual(new Object()));
+    void equalsAndHashCode() {
+        EqualsVerifier.simple().forClass(CategoryDTO.class).verify();
     }
 
-    @Test
-    void testHashCode() {
-        assertEquals(categoryDTO.hashCode(), categoryDTO1.hashCode());
-        assertNotEquals(categoryDTO.hashCode(), new CategoryDTO().hashCode());
-    }
-
-    @Test
-    void testToString() {
-        assertEquals(categoryDTO.toString(), categoryDTO1.toString());
-        assertNotEquals(categoryDTO.toString(), new CategoryDTO().toString());
-    }
 }

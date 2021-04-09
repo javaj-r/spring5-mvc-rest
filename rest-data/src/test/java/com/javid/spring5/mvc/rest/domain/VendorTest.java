@@ -1,12 +1,11 @@
 package com.javid.spring5.mvc.rest.domain;
 
-import net.bytebuddy.utility.RandomString;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meanbean.test.BeanTester;
+import org.meanbean.test.EqualsMethodTester;
 
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * Created by Javid on 4/8/2021.
@@ -14,41 +13,29 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class VendorTest {
 
-    Vendor vendor;
-    Vendor vendor1;
-
-    @BeforeEach
-    void setUp() {
-        var id = new Random().nextLong();
-        var name = new RandomString().nextString();
-
-        vendor = new Vendor().setId(id).setName(name);
-        vendor1 = new Vendor().setId(id).setName(name);
+    @Test
+    void chainingSetters() {
+        assertEquals(1L, new Vendor().setId(1L).getId());
+        assertEquals("j", new Vendor().setName("j").getName());
     }
 
     @Test
-    void testEquals() {
-        assertEquals(vendor, vendor);
-        assertEquals(vendor1, vendor);
-        assertNotEquals(vendor, new Vendor());
-        assertNotEquals(vendor, new Object());
+    void gettersAndSetters() {
+        new BeanTester().testBean(Vendor.class);
     }
 
     @Test
-    void canEqual() {
-        assertTrue(new Vendor().canEqual(new Vendor()));
-        assertFalse(new Vendor().canEqual(new Object()));
+    void equalsAndHashCode() {
+        new EqualsMethodTester().testEqualsMethod(Vendor.class);
+//        new HashCodeMethodTester().testHashCodeMethod(Vendor.class);
     }
 
     @Test
     void testHashCode() {
-        assertEquals(vendor.hashCode(), vendor1.hashCode());
-        assertNotEquals(vendor.hashCode(), new Vendor().hashCode());
+        assertEquals(new Vendor().setId(1L).setName("name").hashCode(),
+                new Vendor().setId(1L).setName("name").hashCode());
+        assertNotEquals(new Vendor().setId(1L).setName("name").hashCode(),
+                new Vendor().hashCode());
     }
 
-    @Test
-    void testToString() {
-        assertEquals(vendor.toString(), vendor1.toString());
-        assertNotEquals(vendor.toString(), new Vendor().toString());
-    }
 }

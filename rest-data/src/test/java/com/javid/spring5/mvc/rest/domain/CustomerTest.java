@@ -1,12 +1,12 @@
 package com.javid.spring5.mvc.rest.domain;
 
-import net.bytebuddy.utility.RandomString;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meanbean.test.BeanTester;
+import org.meanbean.test.EqualsMethodTester;
+import org.meanbean.test.HashCodeMethodTester;
 
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * Created by Javid on 4/8/2021.
@@ -14,44 +14,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerTest {
 
-    Customer customer;
-    Customer customer1;
-
-    @BeforeEach
-    void setUp() {
-        var id = new Random().nextLong();
-        var fName = new RandomString().nextString();
-        var lName = new RandomString().nextString();
-
-        customer = new Customer().setId(id).setFirstName(fName).setLastName(lName);
-        customer1 = new Customer().setId(id).setFirstName(fName).setLastName(lName);
+    @Test
+    void chainingSetters() {
+        assertEquals(1L, new Customer().setId(1L).getId());
+        assertEquals("j", new Customer().setFirstName("j").getFirstName());
+        assertEquals("j", new Customer().setLastName("j").getLastName());
     }
 
     @Test
-    void testEquals() {
-        assertEquals(customer, customer);
-        assertEquals(customer1, customer);
-        assertNotEquals(customer, new Customer().setId(1L));
-        assertNotEquals(customer, new Customer().setId(1L).setFirstName("som"));
-        assertNotEquals(customer, new Customer().setId(1L).setFirstName("som").setLastName("a"));
-        assertNotEquals(customer, new Object());
+    void gettersAndSetters() {
+        new BeanTester().testBean(Customer.class);
     }
 
     @Test
-    void canEqual() {
-        assertTrue(new Customer().setFirstName("f").canEqual(new Customer()));
-        assertFalse(new Customer().canEqual(new Object()));
+    void equalsAndHashCode() {
+        new EqualsMethodTester().testEqualsMethod(Customer.class);
+        new HashCodeMethodTester().testHashCodeMethod(Customer.class);
     }
 
     @Test
     void testHashCode() {
-        assertEquals(customer.hashCode(), customer1.hashCode());
-        assertNotEquals(customer.hashCode(), new Customer().hashCode());
+        assertEquals(new Customer().setId(1L).setFirstName("F").setLastName("L").hashCode(),
+                new Customer().setId(1L).setFirstName("F").setLastName("L").hashCode());
+        assertNotEquals(new Customer().setId(1L).setFirstName("F").setLastName("L").hashCode(),
+                new Customer().hashCode());
     }
 
-    @Test
-    void testToString() {
-        assertEquals(customer.toString(), customer1.toString());
-        assertNotEquals(customer.toString(), new Customer().toString());
-    }
 }

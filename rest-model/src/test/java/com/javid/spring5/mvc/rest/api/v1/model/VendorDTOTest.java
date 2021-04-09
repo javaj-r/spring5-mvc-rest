@@ -1,10 +1,10 @@
 package com.javid.spring5.mvc.rest.api.v1.model;
 
-import net.bytebuddy.utility.RandomString;
-import org.junit.jupiter.api.BeforeEach;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import org.meanbean.test.BeanTester;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by Javid on 3/29/2021.
@@ -12,41 +12,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class VendorDTOTest {
 
-    VendorDTO vendorDTO;
-    VendorDTO vendorDTO1;
-
-    @BeforeEach
-    void setUp() {
-        var name = new RandomString().nextString();
-        var url = new RandomString().nextString();
-
-        vendorDTO = new VendorDTO().setName(name).setVendorUrl(url);
-        vendorDTO1 = new VendorDTO().setName(name).setVendorUrl(url);
+    @Test
+    void chainingSetters() {
+        assertEquals("j", new VendorDTO().setName("j").getName());
+        assertEquals("j", new VendorDTO().setVendorUrl("j").getVendorUrl());
     }
 
     @Test
-    void testEquals() {
-        assertEquals(vendorDTO, vendorDTO);
-        assertEquals(vendorDTO1, vendorDTO);
-        assertNotEquals(vendorDTO,new VendorDTO());
-        assertNotEquals(vendorDTO,new Object());
+    void gettersAndSetters() {
+        new BeanTester().testBean(VendorDTO.class);
     }
 
     @Test
-    void canEqual() {
-        assertTrue(new VendorDTO().canEqual(new VendorDTO()));
-        assertFalse(new VendorDTO().canEqual(new Object()));
+    void equalsAndHashCode() {
+        EqualsVerifier.simple().forClass(VendorDTO.class).verify();
     }
 
-    @Test
-    void testHashCode() {
-        assertEquals(vendorDTO.hashCode(), vendorDTO1.hashCode());
-        assertNotEquals(vendorDTO.hashCode(), new VendorDTO().hashCode());
-    }
-
-    @Test
-    void testToString() {
-        assertEquals(vendorDTO.toString(), vendorDTO1.toString());
-        assertNotEquals(vendorDTO.toString(), new VendorDTO().toString());
-    }
 }
