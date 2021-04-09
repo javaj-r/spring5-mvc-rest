@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -12,8 +13,9 @@ import java.util.List;
  */
 
 @ApiModel(value = "Vendors", description = "List of all vendors")
-@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class VendorsDTO {
 
     @ApiModelProperty(required = true, notes = "A list of vendors", value = "Vendors list")

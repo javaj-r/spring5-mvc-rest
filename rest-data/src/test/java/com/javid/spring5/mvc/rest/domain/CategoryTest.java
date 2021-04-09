@@ -1,12 +1,12 @@
 package com.javid.spring5.mvc.rest.domain;
 
-import net.bytebuddy.utility.RandomString;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meanbean.test.BeanTester;
+import org.meanbean.test.EqualsMethodTester;
+import org.meanbean.test.HashCodeMethodTester;
 
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * Created by Javid on 4/8/2021.
@@ -14,41 +14,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryTest {
 
-    Category category;
-    Category category1;
-
-    @BeforeEach
-    void setUp() {
-        var id = new Random().nextLong();
-        var name = new RandomString().nextString();
-
-        category = new Category().setId(id).setName(name);
-        category1 = new Category().setId(id).setName(name);
+    @Test
+    void chainingSetters() {
+        assertEquals(1L, new Category().setId(1L).getId());
+        assertEquals("j", new Category().setName("j").getName());
     }
 
     @Test
-    void testEquals() {
-        assertEquals(category, category);
-        assertEquals(category1, category);
-        assertNotEquals(category, new Category());
-        assertNotEquals(category, new Object());
+    void gettersAndSetters() {
+        new BeanTester().testBean(Category.class);
     }
 
     @Test
-    void canEqual() {
-        assertTrue(new Category().canEqual(new Category()));
-        assertFalse(new Category().canEqual(new Object()));
+    void equalsAndHashCode() {
+        new EqualsMethodTester().testEqualsMethod(Category.class);
+        new HashCodeMethodTester().testHashCodeMethod(Category.class);
     }
 
     @Test
     void testHashCode() {
-        assertEquals(category.hashCode(), category1.hashCode());
-        assertNotEquals(category.hashCode(), new Category().hashCode());
-    }
-
-    @Test
-    void testToString() {
-        assertEquals(category.toString(), category1.toString());
-        assertNotEquals(category.toString(), new Category().toString());
+        assertEquals(new Category().setId(1L).setName("N").hashCode(),
+                new Category().setId(1L).setName("N").hashCode());
+        assertNotEquals(new Category().setId(1L).setName("N").hashCode(), new Category().hashCode());
     }
 }

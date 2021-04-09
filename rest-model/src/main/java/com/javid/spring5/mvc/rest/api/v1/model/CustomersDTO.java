@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @ApiModel(value = "Customers", description = "List of all customers")
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class CustomersDTO {
 
