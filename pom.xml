@@ -8,6 +8,7 @@
         <module>rest-data</module>
         <module>rest-control</module>
         <module>rest-app</module>
+        <module>rest-xml-schema</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
